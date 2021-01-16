@@ -13,11 +13,11 @@ output:
 
 ## Introduction
 
-Recommendation systems use ratings that users have given to items to make specific recommendations. Companies that sell many products to many customers and permit these customers to rate their products, like Amazon, are able to collect massive datasets that can be used to predict what rating a particular user will give to a specific item. Items for which a high rating is predicted for a given user are then recommended to that user. 
+Recommendation system is a class of machine learning algorithim that offers useful and relevant suggestions to users. Recommendation systems has applications in several fields but for this project we would focus on creating a movie recommender system. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; https://grouplens.org/datasets/movielens/10m/ and http://files.grouplens.org/datasets/movielens/ml-10m.zip. This dataset contains roughly ten million obervations and six variables namely; userId, movieId, rating, timestamp, title and genres.
+The aim of this project is to utilize a subset of the dataset to build a model that can make predictions in a validation set.
 
-The same could be done for other items, as movies for instance in our case. Recommendation systems are one of the most used models in machine learning algorithms. In fact the success of Netflix is said to be based on its strong recommendation system. The Netflix prize (open competition for the best collaborative filtering algorithm to predict user ratings for films, based on previous ratings without any other information about the users or films), in fact, represent the high importance of algorithm for products recommendation system.
 
-For this project we will focus on create a movie recommendation system using the 10M version of MovieLens dataset, collected by GroupLens Research.
+
 
 
 ## Aim of the project
