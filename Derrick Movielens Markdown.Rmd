@@ -90,6 +90,8 @@ rm(dl, ratings, movies, test_index, temp, movielens, removed)
 ## Data exploration and visualization
 
 ###Number of rating per movie
+
+Certian movies were rated a few times and hence emphasis would not be placed on them in the predictive algorithim
 ```{r, message= FALSE}
 edx %>%
   count(movieId) %>%
@@ -100,6 +102,8 @@ edx %>%
 ```
 
 ### Number of rating per user
+Some users tend to rate very few movies whiles others may rate a lot more movies. There is therefore a disparity in how active users are.
+
 ```{r, message= FALSE}
 edx %>%
   count(userId) %>%
@@ -109,3 +113,4 @@ edx %>%
   ggtitle("Number of ratings given by users")
   ```
 
+## Modeling approach
