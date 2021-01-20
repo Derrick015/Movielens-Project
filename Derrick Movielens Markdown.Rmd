@@ -65,7 +65,7 @@ movies <- as.data.frame(movies) %>% mutate(movieId = as.numeric(movieId),
 movielens <- left_join(ratings, movies, by = "movieId")
 ```
 
-The dataset will now be split into a train set (edx) which we will use to train, develop and select our algorithim and a test set (validation) to test the performance of the algorithm. The test set will be 10% of the dataset.
+The dataset will now be split into a train set (edx) which we will use to train, develop and select our algorithim and a test set (validation) to test the performance of the final algorithm. The test set will be 10% of the dataset.
 
 
 ```{r}
@@ -87,3 +87,29 @@ edx <- rbind(edx, removed)
 rm(dl, ratings, movies, test_index, temp, movielens, removed)
 
 ```
+## Data exploration and visualization
+
+###Number of rating per movie
+```{r, message= FALSE}
+edx %>%
+  count(movieId) %>%
+  ggplot(aes(n)) +
+  geom_histogram(bins = 30, color = "black") +
+  scale_x_log10() +
+  xlab("Number of ratings") +
+  ylab("Number of movies") +
+  ggtitle("Number of ratings per movie")
+```
+
+### Number of rating per user
+```{r, message= FALSE}
+edx %>%
+  count(userId) %>%
+  ggplot(aes(n)) +
+  geom_histogram(bins = 30, color = "black") +
+  scale_x_log10() +
+  xlab("Number of ratings") + 
+  ylab("Number of users") +
+  ggtitle("Number of ratings given by users")
+  ```
+
