@@ -11,7 +11,7 @@ output:
 
 
 
-## Introduction
+# Introduction
 
 Recommendation system is a class of machine learning algorithim that offers useful and relevant suggestions to users. Recommendation systems has applications in several fields but for this project we would focus on creating a movie recommender system. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; https://grouplens.org/datasets/movielens/10m/ and http://files.grouplens.org/datasets/movielens/ml-10m.zip. This dataset contains roughly ten million obervations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
 
@@ -21,8 +21,23 @@ $$ RMSE = \sqrt{\frac{1}{N}\displaystyle\sum_{u,i} (\hat{y}_{u,i}-y_{u,i})^{2}} 
 
 To achieve the aim of this project we will first import the data, perform some exploratory data analysis and finally compare four  models to determine the best RMSE for the movie rating prediction.
 
+# Methods
 
-## Data Improtation
+## Installing packages and Importing data
+
+```{r, message=FALSE}
+#Load Packages and libraries
+if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
+if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.org")
+if(!require(data.table)) install.packages("data.table", repos = "http://cran.us.r-project.org")
+if(!require(recosystem)) install.packages("recosystem", repos = "http://cran.us.r-project.org")
+
+
+library(tidyverse)
+library(caret)
+library(data.table)
+library(recosystem)
+```
 
 The MovieLens dataset is automatically downloaded
 
