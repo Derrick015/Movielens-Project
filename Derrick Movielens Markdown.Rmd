@@ -63,7 +63,12 @@ movies <- as.data.frame(movies) %>% mutate(movieId = as.numeric(movieId),
 
 
 movielens <- left_join(ratings, movies, by = "movieId")
+```
 
+The dataset will now be split into a train set (edx) which we will use to train, develop and select our algorithim and a test set (validation) to test the performance of the algorithm. The test set will be 10% of the dataset.
+
+
+```{r}
 # Validation set will be 10% of MovieLens data
 set.seed(1, sample.kind="Rounding") # if using R 3.5 or earlier, use `set.seed(1)`
 test_index <- createDataPartition(y = movielens$rating, times = 1, p = 0.1, list = FALSE)
