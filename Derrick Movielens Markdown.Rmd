@@ -94,22 +94,18 @@ rm(dl, ratings, movies, test_index, temp, movielens, removed)
 edx %>%
   count(movieId) %>%
   ggplot(aes(n)) +
-  geom_histogram(bins = 30, color = "black") +
-  scale_x_log10() +
-  xlab("Number of ratings") +
-  ylab("Number of movies") +
-  ggtitle("Number of ratings per movie")
+  geom_histogram(bins = 25, color = "black", fill="green") +
+  scale_x_log10() + xlab("Number of ratings") +
+  ylab("Number of movies") + ggtitle("Number of ratings per movie")
 ```
 
 ### Number of rating per user
 ```{r, message= FALSE}
 edx %>%
   count(userId) %>%
-  ggplot(aes(n)) +
-  geom_histogram(bins = 30, color = "black") +
+  ggplot(aes(n)) + geom_histogram(bins = 25, color = "black",fill="green") +
   scale_x_log10() +
-  xlab("Number of ratings") + 
-  ylab("Number of users") +
+  xlab("Number of ratings") + ylab("Number of users") +
   ggtitle("Number of ratings given by users")
   ```
 
