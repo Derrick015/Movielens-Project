@@ -132,6 +132,16 @@ With a mean rating of approximatly 3.51, we will movie forth and compute the nai
 naive_rmse <- RMSE(validation$rating, mu)
 naive_rmse
 ```
+Now we will tabulate the first RMSE results
+
+```{r, echo = TRUE}
+rmse_results <- data_frame(method = "Average Movie Rating",
+                           RMSE = naive_rmse)
+
+rmse_results %>% knitr::kable()
+```
+
+
 
 
 
