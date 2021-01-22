@@ -116,5 +116,10 @@ edx %>%
 ## Modeling approach
 
 ### Average Movie Rating Model
-Our fist model will be a simple recommendation system. Here we will predit the same rating for all movies irrespective of the user and movie. A model-based approach will be utlized, which assumes the same rating for all movies and all users, with all differences explained by random variation.
+Our fist model will be a simple recommendation system. Here we will predit the same rating for all movies irrespective of the user and movie. A model-based approach will be utlized, which assumes the same rating for all movies and all users, with all differences explained by random variation. 
+
+$$ Y_{u, i} = \mu + \epsilon_{u, i} $$
+
+Here $\epsilon_{u,i}$ represents independent error sample from the same distribution centered at 0 and $\mu$ represents the true rating for all movies. We know that the estimate that minimizes the residual mean squared error is the least squares estimate of $Y_{u,i}$ , in this instance, it is basically the average of all the ratings.
+
 
