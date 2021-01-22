@@ -122,4 +122,16 @@ $$ Y_{u, i} = \mu + \epsilon_{u, i} $$
 
 Here $\epsilon_{u,i}$ represents independent error sample from the same distribution centered at 0 and $\mu$ represents the true rating for all movies. We know that the estimate that minimizes the residual mean squared error is the least squares estimate of $Y_{u,i}$ , in this instance, it is basically the average of all the ratings.
 
+```{r, echo = TRUE}
+mu <- mean(edx$rating)
+mu
+```
+
+With a mean rating of approximatly 3.51, we will movie forth and compute the naive RMSE
+```{r, echo = TRUE}
+naive_rmse <- RMSE(validation$rating, mu)
+naive_rmse
+```
+
+
 
