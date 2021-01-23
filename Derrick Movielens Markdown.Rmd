@@ -148,29 +148,32 @@ $$Y_{u, i} = \mu +b_{i}+ \epsilon_{u, i}$$
 
 We know that the least sqaures estimate is the average of the $$Y_{u, i}$$ minus the overall mean for each movie $i$. This can be computed with:
 
-```
+```{r, echo = TRUE}
 movie_avgs<- edx %>% 
   group_by(movieId) %>%
   summarise(b_i=mean(rating-mu))
 ```
 
-```
+```{r, echo = TRUE}
 movie_avgs %>% qplot(b_i, geom ="histogram", bins = 10, data = ., color = I("black"), ylab = "Number of movies")
 ```
-Some estimates seem to vary substantially tihs is because some movies are good and others are bad. Overall the histogram is left skewed indicating the more movies 
+Some estimates seem to vary substantially tihs is because some movies are good and others are bad. Overall the histogram is left skewed indicating that more movies have negative effects. Now lets make make predictions with the inclusion of the movie effect.
 
-
-# RMSE for movie effect model
+```{r, echo = TRUE}
 predicted_ratings <- mu +  validation %>%
   left_join(movie_avgs, by='movieId') %>%
   .$b_i
 model_1_rmse <- RMSE(predicted_ratings, validation$rating)
-# Saving RMSE for movie effect model
+```
+We will now tablulate this result with previous RMSE results for comparison
+
+```{r, echo = TRUE}
 rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Movie effect model",  
                                      RMSE = model_1_rmse ))
 rmse_results %>% knitr::kable()
-
+```
+By adding the computed $b_{i}$ to $\mu$ and thus capturing the movie effect we can see and improvement in model, however there is still more we can do to make the recommender system even better.
 
 
 
