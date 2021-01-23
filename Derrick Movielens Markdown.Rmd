@@ -143,7 +143,7 @@ rmse_results %>% knitr::kable()
 
 ### 2. Movie Effect Model
 
-Some movies tend to be rated highly than others and thus we can improve our previous model by including a term, $b_{i}$ to represent the average rating for each movie  $i$. 
+Some movies tend to be rated highly than others as we will see in the diagram below, thus we can improve our previous model by including a term, $b_{i}$ to represent the average rating for each movie  $i$. 
 $$Y_{u, i} = \mu +b_{i}+ \epsilon_{u, i}$$
 
 We know that the least sqaures estimate is the average of the $$Y_{u, i}$$ minus the overall mean for each movie $i$. This can be computed with:
@@ -175,8 +175,20 @@ rmse_results %>% knitr::kable()
 ```
 By adding the computed $b_{i}$ to $\mu$ and thus capturing the movie effect we can see and improvement in model, however there is still more we can do to make the recommender system even better.
 
+### 3. Movie and user effect model
 
+Next we have to consider how difference users vary in how they rate movies and as illustrated in the histogram below we can see variability across users, with some users highly rating all movies they watch whiles others are somewhere in the middle. Therefore will will augment our model with a new term    which is the user-specific effect.
 
+```
+user_avgs <- test_set %>% 
+     left_join(movie_avgs, by='movieId') %>%
+     group_by(userId) %>%
+     summarize(b_u = mean(rating - mu - b_i))
+```
+
+```
+ user_avgs%>% qplot(b_u, geom ="histogram", bins = 30, data = ., color = I("black"))
+```
 
 
 
