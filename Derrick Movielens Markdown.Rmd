@@ -19,7 +19,7 @@ The aim of this project is to utilize a subset of the dataset to build an algori
 
 $$ RMSE = \sqrt{\frac{1}{N}\displaystyle\sum_{u,i} (\hat{y}_{u,i}-y_{u,i})^{2}} $$
 
-To achieve the aim of this project we will first import the data, perform some exploratory data analysis and finally compare four  models to determine the best RMSE for the movie rating prediction.
+To achieve the aim of this project we will first import the data, perform some exploratory data analysis and finally compare five models to determine the best RMSE for the movie rating prediction.
 
 # Methods
 
