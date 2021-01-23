@@ -115,7 +115,7 @@ edx %>%
 
 ## Modeling approach
 
-### Average Movie Rating Model
+### 1. Average Movie Rating Model
 Our fist model will be a simple recommendation system. Here we will predit the same rating for all movies irrespective of the user and movie. A model-based approach will be utlized, which assumes the same rating for all movies and all users, with all differences explained by random variation. 
 
 $$ Y_{u, i} = \mu + \epsilon_{u, i} $$
@@ -140,6 +140,38 @@ rmse_results <- data_frame(method = "Average Movie Rating",
 
 rmse_results %>% knitr::kable()
 ```
+
+### 2. Movie Effect Model
+
+Some movies tend to be rated highly than others and thus we can improve our previous model by including a term, $b_{i}$ to represent the average rating for each movie  $i$. 
+$$Y_{u, i} = \mu +b_{i}+ \epsilon_{u, i}$$
+
+We know that the least sqaures estimate is the average of the $$Y_{u, i}$$ minus the overall mean for each movie $i$. This can be computed with:
+
+```
+movie_avgs<- edx %>% 
+  group_by(movieId) %>%
+  summarise(b_i=mean(rating-mu))
+```
+
+```
+movie_avgs %>% qplot(b_i, geom ="histogram", bins = 10, data = ., color = I("black"), ylab = "Number of movies")
+```
+Some estimates seem to vary substantially tihs is because some movies are good and others are bad. Overall the histogram is left skewed indicating the more movies 
+
+
+# RMSE for movie effect model
+predicted_ratings <- mu +  validation %>%
+  left_join(movie_avgs, by='movieId') %>%
+  .$b_i
+model_1_rmse <- RMSE(predicted_ratings, validation$rating)
+# Saving RMSE for movie effect model
+rmse_results <- bind_rows(rmse_results,
+                          data_frame(method="Movie effect model",  
+                                     RMSE = model_1_rmse ))
+rmse_results %>% knitr::kable()
+
+
 
 
 
