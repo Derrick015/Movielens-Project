@@ -215,6 +215,11 @@ rmse_results <- bind_rows(rmse_results,
 rmse_results %>% knitr::kable()
 ```
  
+ 
+### 4. Regularizing movie and user effect
+
+In our previous models a grevious error was overlooked. Some obsucre movies were rated by a few people leading to more uncertainty and therefore resulting in larger estimates for $b_{i}$ and $b_{u}$. These are noisy estimates and should not be trusteded in our predictions. Large errors can increase our residual mean squared error,so we would rather be conservative when we're not sure. Normally we compute standard errors and construct confidence intervals to account for different levels of uncertainty. However, when making predictions we need one number, one prediction, not an interval. For this, we require the concept of regularization. Regularization permits us to penalize large estimates that come from small sample sizes
+
 
 
 
