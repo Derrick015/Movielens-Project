@@ -85,28 +85,45 @@ rm(dl, ratings, movies, test_index, temp, movielens, removed)
 ```
 ## Data exploration and visualization
 
-###Number of rating per movie
-
-Certian movies were rated a few times and hence emphasis would not be placed on them in the predictive algorithim
-```{r, message= FALSE}
-edx %>%
-  count(movieId) %>%
-  ggplot(aes(n)) +
-  geom_histogram(bins = 25, color = "black", fill="green") +
-  scale_x_log10() + xlab("Number of ratings") +
-  ylab("Number of movies") + ggtitle("Number of ratings per movie")
+average rating by movie in the edx dataset
+```{r}
+edx %>% group_by(movieId) %>%
+  summarise(ave_rating = sum(rating)/n()) %>%
+  ggplot(aes(ave_rating)) +
+  geom_histogram(bins=30, color = I("black")) +
+  labs(x = "Average rating", y = "Number of movies", caption = "source: edx dataset")
 ```
 
-### Number of rating per user
-Some users tend to rate very few movies whiles others may rate a lot more movies. There is therefore a disparity in how active users are.
 
-```{r, message= FALSE}
-edx %>%
-  count(userId) %>%
-  ggplot(aes(n)) + geom_histogram(bins = 25, color = "black",fill="green") +
+number of ratings by movie in the edx dataset
+```{r}
+edx %>% 
+  count(movieId) %>% 
+  ggplot(aes(n)) + 
+  geom_histogram( bins=30, color = I("black")) +
   scale_x_log10() +
-  xlab("Number of ratings") + ylab("Number of users") +
-  ggtitle("Number of ratings given by users")
+  labs(x = "Number of Movies", y = "Number of ratings", caption = "Source: edx dataset")
+ ```
+
+
+# Plot average rating by user in the edx dataset
+edx %>% group_by(userId) %>%
+  summarise(ave_rating = sum(rating)/n()) %>%
+  ggplot(aes(ave_rating)) +
+  geom_histogram(bins=30, color = I("black")) +
+  labs(x = "Average rating", y = "Number of users", caption = "Source: edx dataset") 
+
+
+# Plot number of ratings by user in the edx dataset
+edx %>% 
+  count(userId) %>% 
+  ggplot(aes(n)) + 
+  geom_histogram( bins=30, color = I("black")) +
+  scale_x_log10() +
+  labs(x = "Users", y = "Number of ratings", caption = "Source: edx dataset") 
+
+
+
   ```
 
 ## Modeling approach
