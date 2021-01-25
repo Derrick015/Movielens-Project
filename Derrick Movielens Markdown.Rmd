@@ -85,45 +85,49 @@ rm(dl, ratings, movies, test_index, temp, movielens, removed)
 ```
 ## Data exploration and visualization
 
-average rating by movie in the edx dataset
+### Average movie rating
+The figure below indicates that certain movies tend to be rated highly on average while others are rated low.
+
 ```{r}
 edx %>% group_by(movieId) %>%
   summarise(ave_rating = sum(rating)/n()) %>%
   ggplot(aes(ave_rating)) +
   geom_histogram(bins=30, color = I("black")) +
-  labs(x = "Average rating", y = "Number of movies", caption = "source: edx dataset")
+  labs(x = "Average rating", y = "Number of movies")
 ```
 
-
-number of ratings by movie in the edx dataset
+### Number of ratings per movie
+This figure also shows certain movies having a lot more number of ratings than other movies. This in combination with the variance within the average movie rating all indicate a movie effect which will be accounted for during the final algorithm.
 ```{r}
 edx %>% 
   count(movieId) %>% 
   ggplot(aes(n)) + 
   geom_histogram( bins=30, color = I("black")) +
   scale_x_log10() +
-  labs(x = "Number of Movies", y = "Number of ratings", caption = "Source: edx dataset")
+  labs(x = "Number of Movies", y = "Number of ratings")
  ```
 
 
-# Plot average rating by user in the edx dataset
+### Average rating per user
+
+Here we see from this figure that certain users rate movies more highly done others
+```{r}
 edx %>% group_by(userId) %>%
   summarise(ave_rating = sum(rating)/n()) %>%
   ggplot(aes(ave_rating)) +
   geom_histogram(bins=30, color = I("black")) +
-  labs(x = "Average rating", y = "Number of users", caption = "Source: edx dataset") 
+  labs(x = "Average rating", y = "Number of users") 
+```
+### Number of ratings per user
+Similar to the figure about the number of rating per movie, some users also tend to rate movies a lot more done others. This in addition to the average rating by users also demonstrate a user effect which will also be adjusted for in developing our recommendation system. 
 
-
-# Plot number of ratings by user in the edx dataset
+```{r}
 edx %>% 
   count(userId) %>% 
   ggplot(aes(n)) + 
   geom_histogram( bins=30, color = I("black")) +
   scale_x_log10() +
   labs(x = "Users", y = "Number of ratings", caption = "Source: edx dataset") 
-
-
-
   ```
 
 ## Modeling approach
