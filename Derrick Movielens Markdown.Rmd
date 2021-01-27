@@ -292,5 +292,54 @@ rmse_results %>% knitr::kable()
 ```
 
 
+#5. Matrix factorization
+
+edx_factorization <- edx %>% select(movieId, userId, rating)
+validation_factorization <- validation %>% select(movieId, userId, rating)
+
+edx_factorization <- as.matrix(edx_factorization)
+validation_factorization <- as.matrix(validation_factorization)
+
+write.table(edx_factorization, file = "trainingset.txt", sep = " ", row.names = FALSE, 
+            col.names = FALSE)
+
+write.table(validation_factorization, file = "validationset.txt", sep = " ", 
+            row.names = FALSE, col.names = FALSE)
+
+
+set.seed(76)
+training_dataset <- data_file("trainingset.txt")
+
+validation_dataset <- data_file("validationset.txt")
+
+r = Reco()
+
+opts <- r$tune(training_dataset, opts = list(dim = c(10, 20, 30), lrate = 
+                                               c(0.1,0.2), costp_l1 = 0, costq_l1 = 0, nthread = 1, niter = 10))
+
+
+r$train(training_dataset, opts = c(opts$min, nthread = 1, niter = 20))
+
+"We write predictions to a tempfile on HDisk"
+
+stored_prediction = tempfile()
+
+
+
+r$predict(validation_dataset, out_file(stored_prediction))
+
+real_ratings <- read.table("validationset.txt", header = FALSE, sep = " ")$V3
+
+pred_ratings <- scan(stored_prediction)
+
+rmse_of_model_mf <- RMSE(real_ratings, pred_ratings)
+rmse_of_model_mf 
+
+# Saving results
+rmse_results <- bind_rows(rmse_results,
+                          data_frame(method="Matrix Factorization",  
+                                     RMSE = rmse_of_model_mf ))
+rmse_results %>% knitr::kable()
+
 
 
