@@ -293,6 +293,11 @@ rmse_results %>% knitr::kable()
 
 
 #5. Matrix factorization
+Matrix factorization is a widely used concept in machine learning.
+It is very much related to factor analysis, single value composition,
+and principal component analysis. It works by decomposing the user-item interacton matric into product of two lower dimensionality rectangualr matrices. We will apply this approach in our recommender system by utilizing the recosystem library. First both the 
+
+
 
 edx_factorization <- edx %>% select(movieId, userId, rating)
 validation_factorization <- validation %>% select(movieId, userId, rating)
