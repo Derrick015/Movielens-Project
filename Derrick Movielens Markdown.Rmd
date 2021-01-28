@@ -295,21 +295,29 @@ rmse_results %>% knitr::kable()
 #5. Matrix factorization
 Matrix factorization is a widely used concept in machine learning.
 It is very much related to factor analysis, single value composition,
-and principal component analysis. It works by decomposing the user-item interacton matric into product of two lower dimensionality rectangualr matrices. We will apply this approach in our recommender system by utilizing the recosystem library. First both the 
+and principal component analysis. It works by decomposing the user-item interacton matric into product of two lower dimensionality rectangualr matrices. We will apply this approach in our recommender system by utilizing the recosystem library. 
 
+First both the training and validation set will need to be organized into 3 columns: user, item (movies) and the value (rating).
 
+```{r, echo = TRUE} 
+edx_fc <- edx %>% select(movieId, userId, rating)
+validation_fc <- validation %>% select(movieId, userId, rating)
+```
+After this we will transform them into matrix form.
 
-edx_factorization <- edx %>% select(movieId, userId, rating)
-validation_factorization <- validation %>% select(movieId, userId, rating)
+```{r, echo = TRUE}
+edx_fc <- as.matrix(edx_factorization)
+validation_fc <- as.matrix(validation_factorization)
+```
+We will then write these datasets onto he hard disk
 
-edx_factorization <- as.matrix(edx_factorization)
-validation_factorization <- as.matrix(validation_factorization)
-
-write.table(edx_factorization, file = "trainingset.txt", sep = " ", row.names = FALSE, 
+```{r, echo = TRUE}
+write.table(edx_fc file = "trainingset.txt", sep = " ", row.names = FALSE, 
             col.names = FALSE)
 
-write.table(validation_factorization, file = "validationset.txt", sep = " ", 
+write.table(validation_fc file = "validationset.txt", sep = " ", 
             row.names = FALSE, col.names = FALSE)
+```
 
 
 set.seed(76)
