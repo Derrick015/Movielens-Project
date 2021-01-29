@@ -329,8 +329,9 @@ We will now build a recommender object (r) using the Reco() in the recosystem pa
 ```{r, echo = TRUE}
 r = Reco()
 
-opts <- r$tune(train_fc, opts = list(dim = c(10, 20, 30), lrate = 
-                                               c(0.1,0.2), costp_l1 = 0, costq_l1 = 0, nthread = 1, niter = 10))
+opts <- r$tune(train_fc, opts = list(dim = c(5, 10, 15), lrate = 
+                                               c(0.1,0.2), costp_l1 = 0,
+                                               costq_l1 = 0, nthread = 1, niter = 10))
 ```
 The recommender model will now be trained with $train().
 
@@ -372,5 +373,8 @@ As illustrated above we utliized 5 models for our recommender system with differ
 
 
 # Conclusion
+
+The goal of this project was to develop a recommender system. After some exploratory data analysis we realised patterns in our movie and user data that influenced the creation and augmentation of our models. These where the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally the matrix factorization which produceded the lowest RMSE of about 0.7939 for our recommendation system.
+
 
 
