@@ -13,9 +13,9 @@ output:
 
 # Introduction
 
-A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields and in this project, we will utilize it for movie recommendation. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; https://grouplens.org/datasets/movielens/10m/ and http://files.grouplens.org/datasets/movielens/ml-10m.zip. This dataset contains roughly ten million observations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
+A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields but in this project, we will focus on building a movie recommender system. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; https://grouplens.org/datasets/movielens/10m/ and http://files.grouplens.org/datasets/movielens/ml-10m.zip. This dataset contains roughly ten million observations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
 
-This project aims to utilize a subset of the dataset to build an algorithm that can make predictions about user ratings in a validation set. To achieve this project we will first import the data, perform some exploratory data analysis and finally compare five models to determine the best RMSE for the movie rating prediction.
+In this project we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will first start by importing data, performing some exploratory data analysis and finally comparing five models in order to determine the best Root Mean Square Error (RMSE).
 
 # Methods
 
@@ -38,7 +38,7 @@ MovieLens 10M dataset:
 https://grouplens.org/datasets/movielens/10m/
 http://files.grouplens.org/datasets/movielens/ml-10m.zip
 
-```{r}
+```{r, echo = TRUE}
 dl <- tempfile()
 download.file("http://files.grouplens.org/datasets/movielens/ml-10m.zip", dl)
 
@@ -64,7 +64,7 @@ movielens <- left_join(ratings, movies, by = "movieId")
 The dataset will now be split into a train set (edx) which we will use to train, develop and select our algorithm and a test set (validation) to test the performance of the final algorithm. The test set will be 10% of the dataset.
 
 
-```{r}
+```{r, echo = TRUE}
 # Validation set will be 10% of MovieLens data
 set.seed(1, sample.kind="Rounding") # if using R 3.5 or earlier, use `set.seed(1)`
 test_index <- createDataPartition(y = movielens$rating, times = 1, p = 0.1, list = FALSE)
@@ -86,7 +86,7 @@ rm(dl, ratings, movies, test_index, temp, movielens, removed)
 ## Data exploration and visualization
 
 ### Average movie rating
-The figure below indicates that certain movies tend to be rated highly on average while others are rated low.
+The figure below indicates that certain movies tend to have higher ratings on average while others have lower ratings.
 
 ```{r}
 # Average movie rating
@@ -98,7 +98,7 @@ edx %>% group_by(movieId) %>%
 ```
 
 ### Number of ratings per movie
-This figure also shows certain movies having a lot more ratings than other movies. This in combination with the variance within the average movie rating all indicates a movie effect which will be accounted for during the final algorithm.
+This figure also illustrates that some movies have a high number of ratings while others have a low number nation with the variance within the average movie rating all indicates a movie effect which will be accounted for during the final algorithm.
 
 ```{r}
 edx %>% 
