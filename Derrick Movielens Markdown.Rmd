@@ -369,7 +369,7 @@ rmse_results %>% knitr::kable()
 rmse_results %>% knitr::kable()
 ```
 
-As illustrated above, we utilized five models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we used the mean rating. This resulted in the highest RMSE of approximately 1.0612. Next, we adjusted the model to account for the movie effect which produced an RMSE of about 0.9439. We further augmented the model by capturing the user effect which gave us a better RMSE of approximately 0.8653. We then regularized the movie and user effect model to get rid of noisy estimates affecting our model. This led to a slightly better RMSE of about 0.8648. Finally, by applying matrix factorization we achieved the best RMSE of 
+As illustrated above, we utilized five models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we used the mean rating. This resulted in the highest RMSE of approximately 1.0612. Next, we adjusted the model to account for the movie effect which produced an RMSE of about 0.9439. We further augmented the model by capturing the user effect which gave us a better RMSE of approximately 0.8653. We then regularized the movie and user effect model to get rid of noisy estimates affecting our model. This led to a slightly better RMSE of about 0.8648. Finally, by applying matrix factorization we achieved the best RMSE of 0.7939213
 
 
 # Conclusion
