@@ -201,26 +201,24 @@ By adding the computed $b_{i}$ to $\mu$ and thus capturing the movie effect we c
 
 ### 3. Movie and user effect model
 
-Next, we have to consider how different users vary in how they rate movies and as illustrated in the histogram below we can see variability across users, with some users highly rating all movies they watch while others are somewhere in the middle.
+Next, we have to consider how different users vary in how they rate movies and as illustrated in the histogram below we can see variability across users, with some users highly rating all movies they watch while others are somewhere in the middle. Therefore our model will be augmented with a new term $b_{u}$ which is the user-specific effect. This makes our new model:
+
+$$Y_{u, i} = \mu + b_{i} + b_{u} + \epsilon_{u, i}$$
+
+So we will compute $\mu$ and $b_{i}$, and estimating  $b_{u}$, as the average of $$Y_{u, i} - \mu - b_{i}$$
 
 ```{r, echo = TRUE}  
+user_avgs <- edx %>%
+  left_join(movie_avgs, by='movieId') %>%
+  group_by(userId) %>%
+  summarize(b_u = mean(rating - mu - b_i))
+  
 user_avgs%>% qplot(b_u, geom ="histogram", 
                    bins = 30, data = ., 
                    color = I("white"))
 ```
 
-Therefore will augment our model with a new term $b_{u}$ which is the user-specific effect. This makes our new model:
 
-$$Y_{u, i} = \mu + b_{i} + b_{u} + \epsilon_{u, i}$$
-
-We will therefore ompute $\mu$ and $b_{i}$, and estimating  $b_{u}$, as the average of $$Y_{u, i} - \mu - b_{i}$$
-
-```{r, echo = TRUE}
-user_avgs <- edx %>%
-  left_join(movie_avgs, by='movieId') %>%
-  group_by(userId) %>%
-  summarize(b_u = mean(rating - mu - b_i))
-```
 We will make predictions with the user effect captured.
 
 ```{r, echo = TRUE}
