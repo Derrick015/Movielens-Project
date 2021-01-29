@@ -13,9 +13,9 @@ output:
 
 # Introduction
 
-Recommendation system is a class of machine learning algorithim that offers useful and relevant suggestions to users. Recommendation systems has applications in several fields but for this project we would focus on creating a movie recommender system. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; https://grouplens.org/datasets/movielens/10m/ and http://files.grouplens.org/datasets/movielens/ml-10m.zip. This dataset contains roughly ten million obervations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
+A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields and in this project, we will utilize it for movie recommendation. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; https://grouplens.org/datasets/movielens/10m/ and http://files.grouplens.org/datasets/movielens/ml-10m.zip. This dataset contains roughly ten million observations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
 
-The aim of this project is to utilize a subset of the dataset to build an algorithim that can make predictions about user ratings in a validation set. To achieve this project we will first import the data, perform some exploratory data analysis and finally compare five models to determine the best RMSE for the movie rating prediction.
+This project aims to utilize a subset of the dataset to build an algorithm that can make predictions about user ratings in a validation set. To achieve this project we will first import the data, perform some exploratory data analysis and finally compare five models to determine the best RMSE for the movie rating prediction.
 
 # Methods
 
@@ -61,7 +61,7 @@ movies <- as.data.frame(movies) %>% mutate(movieId = as.numeric(movieId),
 movielens <- left_join(ratings, movies, by = "movieId")
 ```
 
-The dataset will now be split into a train set (edx) which we will use to train, develop and select our algorithim and a test set (validation) to test the performance of the final algorithm. The test set will be 10% of the dataset.
+The dataset will now be split into a train set (edx) which we will use to train, develop and select our algorithm and a test set (validation) to test the performance of the final algorithm. The test set will be 10% of the dataset.
 
 
 ```{r}
@@ -98,7 +98,7 @@ edx %>% group_by(movieId) %>%
 ```
 
 ### Number of ratings per movie
-This figure also shows certain movies having a lot more number of ratings than other movies. This in combination with the variance within the average movie rating all indicate a movie effect which will be accounted for during the final algorithm.
+This figure also shows certain movies having a lot more ratings than other movies. This in combination with the variance within the average movie rating all indicates a movie effect which will be accounted for during the final algorithm.
 
 ```{r}
 edx %>% 
@@ -120,7 +120,7 @@ edx %>% group_by(userId) %>%
   labs(x = "Average rating", y = "Number of users") 
 ```
 ### Number of ratings per user
-Similar to the figure about the number of rating per movie, some users also tend to rate movies a lot more done others. This in addition to the average rating by users also demonstrate a user effect which will also be adjusted for in developing our recommendation system. 
+Similar to the figure about the number of ratings per movie, some users also tend to rate movies a lot more than others. This in addition to the average rating by users also demonstrates a user effect which will also be adjusted for in developing our recommendation system. 
 
 ```{r}
 edx %>% 
@@ -133,28 +133,28 @@ edx %>%
 
 ## Modeling approach
 
-In order to evaluate the performance of the algorthim we will utilise Root Mean Square Error (RMSE). The RMSE is the square root of the mean of the square of all the error. It can be calculated by squaring the residuals,finding the average of the residuals and taking the square root of the result. It basically measures the difference between the predicted and actual values, with a lower RMSE value being better than a higher value.
+To evaluate the performance of the algorithm we will utilize Root Mean Square Error (RMSE). The RMSE is the square root of the mean of the square of all the errors. It can be calculated by squaring the residuals, finding the average of the residuals and taking the square root of the result. It measures the difference between the predicted and actual values, with a lower RMSE value being better than a higher value.
 
 $$ RMSE = \sqrt{\frac{1}{N}\displaystyle\sum_{u,i} (\hat{y}_{u,i}-y_{u,i})^{2}} $$
 
 ### 1. Average Movie Rating Model
-Our fist model will be a simple recommendation system. Here we will predit the same rating for all movies irrespective of the user and movie. A model-based approach will be utlized, which assumes the same rating for all movies and all users, with all differences explained by random variation. 
+Our first model will be a simple recommendation system. Here we will predict the same rating for all movies irrespective of the user and movie. A model-based approach will be utilized, which assumes the same rating for all movies and all users, with all differences explained by random variation. 
 
 $$ Y_{u, i} = \mu + \epsilon_{u, i} $$
 
-Here $\epsilon_{u,i}$ represents independent error sample from the same distribution centered at 0 and $\mu$ represents the true rating for all movies. We know that the estimate that minimizes the residual mean squared error is the least squares estimate of $Y_{u,i}$ , in this instance, it is basically the average of all the ratings.
+Here $\epsilon_{u, i}$ represents an independent error sample from the same distribution centred at 0 and $\mu$ represents the true rating for all movies. We know that the estimate that minimizes the residual mean squared error is the least-squares estimate of $Y_{u, i}$, in this instance, it is the average of all the ratings.
 
 ```{r, echo = TRUE}
 mu <- mean(edx$rating)
 mu
 ```
 
-With a mean rating of approximatly 3.51, we will movie forth and compute the naive RMSE
+With a mean rating of approximately 3.51, we will move forth and compute the naive RMSE
 ```{r, echo = TRUE}
 naive_rmse <- RMSE(validation$rating, mu)
 naive_rmse
 ```
-Now we will tabulate the first RMSE results for later comparision with other models.
+Now we will tabulate the first RMSE results for later comparison with other models.
 
 ```{r, echo = TRUE}
 rmse_results <- data_frame(method = "Average Movie Rating",
@@ -164,7 +164,7 @@ rmse_results %>% knitr::kable()
 
 ### 2. Movie Effect Model
 
-Some movies tend to be rated highly than others as we will see in the diagram below, thus we can improve our previous model by including a term, $b_{i}$ to represent the average rating for each movie  $i$. 
+Some movies tend to be rated higher than others as we will see in the diagram below, thus we can improve our previous model by including a term, $b_{i}$ to represent the average rating for each movie  $i$. 
 $$Y_{u, i} = \mu +b_{i}+ \epsilon_{u, i}$$
 
 We know that the least sqaures estimate is the average of the $$Y_{u, i}$$ minus the overall mean for each movie $i$. This can be computed with:
@@ -181,14 +181,14 @@ movie_avgs %>% qplot(b_i, geom ="histogram",
                      color = I("white"),
                      ylab = "Number of movies")
 ```
-Some estimates seem to vary substantially tihs is because some movies are good and others are bad. Overall the histogram is left skewed indicating that more movies have negative effects. Now lets make make predictions with the inclusion of the movie effect.
+Some estimates seem to vary substantially this is because some movies are good and others are bad. Overall the histogram is left-skewed indicating that more movies have negative effects. Now let's make predictions with the inclusion of the movie effect.
 
 ```{r, echo = TRUE}
 predicted_ratings <- mu +  validation %>%
   left_join(movie_avgs, by='movieId') %>%
   .$b_i
 ```
-We will now tablulate this result with previous RMSE results for comparison
+We will now tabulate this result with previous RMSE results for comparison
 
 ```{r, echo = TRUE}
 model_1_rmse <- RMSE(predicted_ratings, validation$rating)
@@ -197,11 +197,11 @@ rmse_results <- bind_rows(rmse_results,
                                      RMSE = model_1_rmse ))
 rmse_results %>% knitr::kable()
 ```
-By adding the computed $b_{i}$ to $\mu$ and thus capturing the movie effect we can see and improvement in model, however there is still more we can do to make the recommender system even better.
+By adding the computed $b_{i}$ to $\mu$ and thus capturing the movie effect we can see an improvement in the model, however, there is still more we can do to make the recommender system even better.
 
 ### 3. Movie and user effect model
 
-Next we have to consider how difference users vary in how they rate movies and as illustrated in the histogram below we can see variability across users, with some users highly rating all movies they watch whiles others are somewhere in the middle.
+Next, we have to consider how different users vary in how they rate movies and as illustrated in the histogram below we can see variability across users, with some users highly rating all movies they watch while others are somewhere in the middle.
 
 ```{r, echo = TRUE}  
 user_avgs%>% qplot(b_u, geom ="histogram", 
@@ -209,7 +209,7 @@ user_avgs%>% qplot(b_u, geom ="histogram",
                    color = I("white"))
 ```
 
-Therefore will will augment our model with a new term $b_{u}$ which is the user-specific effect. This makes our new model:
+Therefore will augment our model with a new term $b_{u}$ which is the user-specific effect. This makes our new model:
 
 $$Y_{u, i} = \mu + b_{i} + b_{u} + \epsilon_{u, i}$$
 
@@ -244,9 +244,9 @@ rmse_results %>% knitr::kable()
  
 ### 4. Regularizing movie and user effect
 
-In our previous models a grevious error was overlooked. Some obsucre movies were rated by a few people leading to more uncertainty and therefore resulting in larger estimates for $b_{i}$ and $b_{u}$. These are noisy estimates and should not be trusteded in our predictions. Large errors can increase our residual mean squared error,so we would rather be conservative when we're not sure. Normally we compute standard errors and construct confidence intervals to account for different levels of uncertainty. However, when making predictions we need one number, one prediction, not an interval. For this, we require the concept of regularization. Regularization permits us to penalize large estimates that come from small sample sizes. The general idea is to add a penalty for large values of $b_{i}$ and $b_{u}$ to the sum of squares equation that we minimize. To do this we require a tunining parameter (lambda) that will minimize the RMSE. This will therefore minimize the estimates of $b_{i}$ and $b_{u}$ if the number of ratings are small. 
+In our previous models, a grievous error was overlooked. Some obscure movies were rated by a few people leading to more uncertainty and therefore resulting in larger estimates for $b_{i}$ and $b_{u}$. These are noisy estimates and should not be trusted in our predictions. Large errors can increase our residual mean squared error, so we would rather be conservative when we're not sure. Normally we compute standard errors and construct confidence intervals to account for different levels of uncertainty. However, when making predictions we need one number, one prediction, not an interval. For this, we require the concept of regularization. Regularization permits us to penalize large estimates that come from small sample sizes. The general idea is to add a penalty for large values of $b_{i}$ and $b_{u}$ to the sum of squares equation that we minimize. To do this, we require a tuning parameter (lambda) that will minimize the RMSE. This will therefore minimize the estimates of $b_{i}$ and $b_{u}$ if the number of ratings is small. 
 
-For the penalty we will use numbers from 0 to 10 with increaments of 0.25
+For the penalty, we will use numbers from 0 to 10 with increments of 0.25
 
 ```{r, echo = TRUE}
 lambdas<- seq(0,10,0.25)
@@ -282,7 +282,7 @@ lambda
 ```
 Here the optimal lambda is 5.25
 
-Now we wil tabulate and store the regualarized results and compare it to the previous models.
+Now we will tabulate and store the regularized result and compare it to the previous models.
 
 ```{r, echo = TRUE}  
 rmse_results <- bind_rows(rmse_results,
@@ -295,9 +295,9 @@ rmse_results %>% knitr::kable()
 #5. Matrix factorization
 Matrix factorization is a widely used concept in machine learning.
 It is very much related to factor analysis, single value composition,
-and principal component analysis. It works by decomposing the user-item interacton matric into product of two lower dimensionality rectangualr matrices. We will apply this approach in our recommender system by utilizing the recosystem library. 
+and principal component analysis. It works by decomposing the user-item interaction matric into a product of two lower dimensionality rectangular matrices. We will apply this approach in our recommender system by utilizing the recosystem library. 
 
-First both the training and validation set will need to be organized into 3 columns: user, item (movies) and the value (rating).
+First, both the training and validation set will need to be organized into three columns: user, item (movies) and the value (rating).
 
 ```{r, echo = TRUE} 
 edx_fc <- edx %>% select(movieId, userId, rating)
@@ -309,7 +309,7 @@ We will then transform them into matrix format.
 edx_fc <- as.matrix(edx_fc)
 validation_fc <- as.matrix(validation_fc)
 ```
-Next we will write these datasets onto the hard disk and assign them to a train set (train_fc) and a validation set(valid_fc) in order to build the recosystem.
+Next, we will write these datasets onto the hard disk and assign them to a train set (train_fc) and a validation set(valid_fc) to build the recosystem.
 
 ```{r, echo = TRUE}
 write.table(edx_fc, file = "trainingset.txt", sep = " ", row.names = FALSE, 
@@ -324,7 +324,7 @@ train_fc <- data_file("trainingset.txt")
 valid_fc <- data_file("validationset.txt")
 ```
 
-We will now build a recommender object (r) using the Reco() in the recosystem package. We utilize the $tune() approach for find the optimum tuning parameter.
+We will now build a recommender object (r) using the Reco() in the recosystem package. We utilize the $tune() approach to find the optimum tuning parameter.
 
 ```{r, echo = TRUE}
 r = Reco()
@@ -339,7 +339,7 @@ The recommender model will now be trained with $train().
 r$train(train_fc, opts = c(opts$min, nthread = 1, niter = 20))
 ```
 
-Next we will write the predictions to a tempfile on the Hard drive, make predictions on the validation set and calculate the RMSE.
+Next, we will write the predictions to a temp file on the Hard drive, make predictions on the validation set and calculate the RMSE.
 
 ```{r, echo = TRUE}
 
@@ -355,7 +355,7 @@ predicted_ratings <- scan(stored_predictions)
 rmse_fc <- RMSE(actual_ratings, predicted_ratings)
 rmse_fc 
 ```
-Finally we will save and tabulate the RMSE for comparison with the previous models.
+Finally, we will save and tabulate the RMSE for comparison with the previous models.
 
 ```{r, echo = TRUE}
 rmse_results <- bind_rows(rmse_results,
@@ -369,14 +369,14 @@ rmse_results %>% knitr::kable()
 rmse_results %>% knitr::kable()
 ```
 
-As illustrated above we utliized 5 models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we simply used the average rating as a predictor of actual rating. This produced the highest RMSE of approximatly 1.0612. Next we adjusted the model to account for the movie effect which produced an RMSE of about 0.9439. We further augmented the model by capturing the user effect which gave us a better RMSE of approximatly 0.8653. We then regularized the movie and user effect model to get rid of noisey estimates affectng our model. This led to a slighly better RMSE of about 0.8648. Finallly, by applying matrix factorization we achieveed the best RMSE of 
+As illustrated above, we utilized five models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we used the mean rating. This resulted in the highest RMSE of approximately 1.0612. Next, we adjusted the model to account for the movie effect which produced an RMSE of about 0.9439. We further augmented the model by capturing the user effect which gave us a better RMSE of approximately 0.8653. We then regularized the movie and user effect model to get rid of noisy estimates affecting our model. This led to a slightly better RMSE of about 0.8648. Finally, by applying matrix factorization we achieved the best RMSE of 
 
 
 # Conclusion
 
-The goal of this project was to develop a recommender system. After some exploratory data analysis we realised patterns in our movie and user data that influenced the creation and augmentation of our models. These where the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally the matrix factorization which produceded the lowest RMSE of about 0.7939 for our recommendation system.
-There were sever CPU and memory limitations, curtailing the utilization of powerful techniques and larger datasets which may have resulted in better model performance.
-In the future, it would be intersting to explore how the genre effect may affect model performance. The ensemble method which combines several models could also be employed and its impact to model performance measured.
+The goal of this project was to develop a recommender system. After some exploratory data analysis, we realized patterns in our movie and user data that influenced the creation of our models. These were the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally the matrix factorization which produced the lowest RMSE of about 0.7939 for our recommendation system.
+There were severe CPU and memory limitations, curtailing the utilization of powerful techniques and larger datasets which may result in better model performance.
+In the future, it would be interesting to explore how the genre effect may affect model performance. The ensemble method which combines several models could also be employed and its impact on model performance measured.
 
 
 
