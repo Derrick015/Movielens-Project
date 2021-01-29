@@ -375,6 +375,7 @@ As illustrated above we utliized 5 models for our recommender system with differ
 # Conclusion
 
 The goal of this project was to develop a recommender system. After some exploratory data analysis we realised patterns in our movie and user data that influenced the creation and augmentation of our models. These where the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally the matrix factorization which produceded the lowest RMSE of about 0.7939 for our recommendation system.
+There were sever CPU and memory limitations, limiting the utilization of powerful techniques and larger datasets which may have resulted in better model performance.
 
 
 
