@@ -362,3 +362,13 @@ rmse_results <- bind_rows(rmse_results,
 rmse_results %>% knitr::kable()
 ```
 
+# Results
+
+```{r, echo = TRUE}
+rmse_results %>% knitr::kable()
+```
+
+As illustrated above we utliized 5 models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we simply used the average rating as a predictor of actual rating. This produced the highest RMSE of approximatly 1.0612. Next we adjusted the model to account for the movie effect which produced an RMSE of about 0.9439. We further augmented the model by capturing the user effect which gave us a better RMSE of approximatly 0.8653. We then regularized the movie and user effect model to get rid of noisey estimates affectng our model. This lead to a slighly better RMSE of about 0.8648.
+
+
+
