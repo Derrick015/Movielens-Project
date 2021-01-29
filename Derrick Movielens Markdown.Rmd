@@ -306,16 +306,16 @@ validation_fc <- validation %>% select(movieId, userId, rating)
 We will then transform them into matrix format.
 
 ```{r, echo = TRUE}
-edx_fc <- as.matrix(edx_factorization)
-validation_fc <- as.matrix(validation_factorization)
+edx_fc <- as.matrix(edx_fc)
+validation_fc <- as.matrix(validation_fc)
 ```
 Next we will write these datasets onto the hard disk and assign them to a train set (train_fc) and a validation set(valid_fc) in order to build the recosystem.
 
 ```{r, echo = TRUE}
-write.table(edx_fc file = "trainingset.txt", sep = " ", row.names = FALSE, 
+write.table(edx_fc, file = "trainingset.txt", sep = " ", row.names = FALSE, 
             col.names = FALSE)
 
-write.table(validation_fc file = "validationset.txt", sep = " ", 
+write.table(validation_fc, file = "validationset.txt", sep = " ", 
             row.names = FALSE, col.names = FALSE)
             
 set.seed(76)
