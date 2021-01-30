@@ -17,6 +17,7 @@ A recommendation system is a class of machine learning algorithm that offers use
 
 In this project we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will first start by importing data, performing some exploratory data analysis and finally comparing five models in order to determine the best Root Mean Square Error (RMSE).
 
+
 # Methods
 
 ## Installing packages and Importing data
@@ -83,6 +84,7 @@ edx <- rbind(edx, removed)
 rm(dl, ratings, movies, test_index, temp, movielens, removed)
 
 ```
+
 ## Data exploration and visualization
 
 ### Average movie rating
@@ -133,10 +135,10 @@ edx %>%
   
  The difference in the number of movies rated per user in addition to the average rating by users, demonstrates a user effect we will adjusted for in developing our model. 
  
+ 
+ ## Modeling approach
 
-## Modeling approach
-
-To evaluate the performance of the algorithm we will utilize Root Mean Square Error (RMSE). The RMSE is the square root of the mean of the square of all the errors. It can be calculated by squaring the residuals, finding the average of the residuals and taking the square root of the result. It measures the difference between the predicted and actual values, with a lower RMSE value being better than a higher value.
+The criteria to evaluate model performance will be the Root Mean Square Error (RMSE). The RMSE is the square root of the mean of the square of all the errors. It can be calculated by squaring the residuals, finding the average of the residuals and taking the square root of the result. It measures the difference between the predicted and actual values, with a lower RMSE value being better than a higher value.
 
 $$ RMSE = \sqrt{\frac{1}{N}\displaystyle\sum_{u,i} (\hat{y}_{u,i}-y_{u,i})^{2}} $$
 
