@@ -120,7 +120,7 @@ edx %>% group_by(userId) %>%
   labs(x = "Average rating", y = "Number of users") 
 ```
 ### Number of ratings per user
-Similar to the figure about the number of ratings per movie, some users also tend to rate movies a lot more than others. This in addition to the average rating by users also demonstrates a user effect which will also be adjusted for in developing our recommendation system. 
+Similar to the number of ratings per movie, some users also tend to rate movie more number of times than others. 
 
 ```{r}
 edx %>% 
@@ -130,6 +130,9 @@ edx %>%
   scale_x_log10() +
   labs(x = "Users", y = "Number of ratings") 
   ```
+  
+ The difference in the number of movies rated per user in addition to the average rating by users, demonstrates a user effect we will adjusted for in developing our model. 
+ 
 
 ## Modeling approach
 
