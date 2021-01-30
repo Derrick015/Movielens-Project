@@ -98,8 +98,7 @@ edx %>% group_by(movieId) %>%
 ```
 
 ### Number of ratings per movie
-This figure also illustrates that some movies have a high number of ratings while others have a low number nation with the variance within the average movie rating all indicates a movie effect which will be accounted for during the final algorithm.
-
+This figure illustrates that some movies have a high number of ratings while others have a low number of ratings. 
 ```{r}
 edx %>% 
   count(movieId) %>% 
@@ -107,11 +106,12 @@ edx %>%
   geom_histogram( bins=35, color = "white") +
   scale_x_log10() + labs(x = "Movies", y = "Number of Ratings")
  ```
+These patterns within the average movie rating and number of ratings per movie all indicate a movie effect which will be accounted for during the final algorithm.
 
 
 ### Average rating per user
 
-Here we see from this figure that certain users rate movies more highly done others
+We see from this figure that certain users give higher ratings on average than others.
 ```{r}
 edx %>% group_by(userId) %>%
   summarise(avg_rating = sum(rating)/n()) %>%
