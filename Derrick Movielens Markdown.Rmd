@@ -13,9 +13,9 @@ output:
 
 # Introduction
 
-A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields but in this project, we will focus on building a movie recommender system. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; https://grouplens.org/datasets/movielens/10m/ and http://files.grouplens.org/datasets/movielens/ml-10m.zip. This dataset contains roughly ten million observations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
+A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields but in this project, we will focus on building a movie recommendation system. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; <https://grouplens.org/datasets/movielens/10m/> and <http://files.grouplens.org/datasets/movielens/ml-10m.zip>. This dataset contains roughly ten million observations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
 
-In this project we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will first start by importing data, performing some exploratory data analysis and finally comparing five models in order to determine the best Root Mean Square Error (RMSE).
+In this project, we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will first start by importing data, performing some exploratory data analysis and finally comparing five models in order to determine the best Root Mean Square Error (RMSE).
 
 
 # Methods
@@ -300,19 +300,19 @@ rmse_results %>% knitr::kable()
 
 Matrix factorization is a widely used concept in machine learning.It is similar to factor analysis, single value composition, and principal component analysis. It works by decomposing the user-item interaction matrix into a product of two lower dimensionality rectangular matrices. We will apply this approach to our recommender system by utilizing the recosystem library. 
 
-First, both the training and validation set will need to be organized into three columns: user, item (movies) and the value (rating).
+First, both the training and validation set will need to be organized into three columns: user (userId),item (movieId) and the value (rating).
 
 ```{r, echo = TRUE} 
 edx_fc <- edx %>% select(movieId, userId, rating)
 validation_fc <- validation %>% select(movieId, userId, rating)
 ```
-We will then transform them into matrix format.
+We will then transform them into a matrix format.
 
 ```{r, echo = TRUE}
 edx_fc <- as.matrix(edx_fc)
 validation_fc <- as.matrix(validation_fc)
 ```
-Next, we will write these datasets onto the hard disk and assign them to a train set (train_fc) and a validation set(valid_fc) to build the recosystem.
+Next, we will write these datasets onto the hard disk as tables and assign them to a train set (train_fc) and a validation set(valid_fc).
 
 ```{r, echo = TRUE}
 write.table(edx_fc, file = "trainingset.txt", sep = " ", row.names = FALSE, 
@@ -320,7 +320,9 @@ write.table(edx_fc, file = "trainingset.txt", sep = " ", row.names = FALSE,
 
 write.table(validation_fc, file = "validationset.txt", sep = " ", 
             row.names = FALSE, col.names = FALSE)
-            
+```
+A supported data formart can be utilized by calling the data_file() fucntion.
+```{r, echo = TRUE}           
 set.seed(76)
 train_fc <- data_file("trainingset.txt")
 
@@ -335,6 +337,7 @@ r = Reco()
 opts <- r$tune(train_fc, opts = list(dim = c(5, 10, 15), lrate = 
                                                c(0.1,0.2), costp_l1 = 0,
                                                costq_l1 = 0, nthread = 1, niter = 10))
+opts
 ```
 The recommender model will now be trained with $train().
 
@@ -342,18 +345,18 @@ The recommender model will now be trained with $train().
 r$train(train_fc, opts = c(opts$min, nthread = 1, niter = 20))
 ```
 
-Next, we will write the predictions to a temp file on the Hard drive, make predictions on the validation set and calculate the RMSE.
+Next, we will write the predictions to a temp file on the hard drive, make predictions on the validation set and calculate the RMSE.
 
 ```{r, echo = TRUE}
 
-stored_predictions = tempfile()
+saved_pred = tempfile()
 
 
-r$predict(valid_fc, out_file(stored_predictions))
+r$predict(valid_fc, out_file(saved_pred))
 
 actual_ratings <- read.table("validationset.txt", header = FALSE, sep = " ")$V3
 
-predicted_ratings <- scan(stored_predictions)
+predicted_ratings <- scan(saved_pred)
 
 rmse_fc <- RMSE(actual_ratings, predicted_ratings)
 rmse_fc 
@@ -372,14 +375,14 @@ rmse_results %>% knitr::kable()
 rmse_results %>% knitr::kable()
 ```
 
-As illustrated above, we utilized five models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we used the mean rating. This resulted in the highest RMSE of approximately 1.0612. Next, we adjusted the model to account for the movie effect which produced an RMSE of about 0.9439. We further augmented the model by capturing the user effect which gave us a better RMSE of approximately 0.8653. We then regularized the movie and user effect model to get rid of noisy estimates affecting our model. This led to a slightly better RMSE of about 0.8648. Finally, by applying matrix factorization we achieved the best RMSE of 0.7939213
+As illustrated above, we utilized five models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we used the mean rating to make predictions. This resulted in the highest RMSE of approximately **1.0612**. Next, we adjusted the model to account for the movie effect which produced an RMSE of about **0.9439**. We further augmented the model by capturing the user effect which gave us a better RMSE of approximately **0.8653**. Afterwards we regularized the movie and user effect model to get rid of noisy estimates affecting our model. This led to a slightly better RMSE of about **0.8648**. Finally, by applying matrix factorization we achieved the best RMSE of **0.7939213**.
 
 
 # Conclusion
 
-The goal of this project was to develop a recommender system. After some exploratory data analysis, we realized patterns in our movie and user data that influenced the creation of our models. These were the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally the matrix factorization which produced the lowest RMSE of about 0.7939 for our recommendation system.
-There were severe CPU and memory limitations, curtailing the utilization of powerful techniques and larger datasets which may result in better model performance.
-In the future, it would be interesting to explore how the genre effect may affect model performance. The ensemble method which combines several models could also be employed and its impact on model performance measured.
+The goal of this project was to develop a movie recommender system with the MovieLens 10M dataset. After some exploratory data analysis, we realized patterns in our movie and user data that influenced the creation of our models. These were the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally the matrix factorization which produced the lowest RMSE of about **0.7939**.
+There were severe CPU and memory limitations, curtailing the utilization of powerful techniques and larger datasets which may have resulted in better model performance.
+For my future work, it would be interesting to explore how the genre effect affects model performance. The ensemble method which combines several models could also be employed and its impact on model performance measured.
 
 
 
