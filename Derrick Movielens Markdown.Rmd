@@ -95,7 +95,7 @@ The figure below indicates that certain movies tend to have higher ratings on av
 edx %>% group_by(movieId) %>%
   summarise(avg_rating = sum(rating)/n()) %>%
   ggplot(aes(avg_rating)) +
-  geom_histogram(bins=35, color ="white") +
+  geom_histogram(bins=35, color ="black", fill="green") +
   labs(x = "Average Rating", y = "Movies")
 ```
 
@@ -105,7 +105,7 @@ This figure illustrates that some movies have a high number of ratings while oth
 edx %>% 
   count(movieId) %>% 
   ggplot(aes(n)) + 
-  geom_histogram( bins=35, color = "white") +
+  geom_histogram( bins=35, color = "black", fill="green") +
   scale_x_log10() + labs(x = "Movies", y = "Number of Ratings")
  ```
 These patterns indicate a movie effect which will be accounted for during the final algorithm.
@@ -118,7 +118,7 @@ We see from this figure that certain users give higher ratings on average than o
 edx %>% group_by(userId) %>%
   summarise(avg_rating = sum(rating)/n()) %>%
   ggplot(aes(avg_rating)) +
-  geom_histogram(bins=35, color = "white") +
+  geom_histogram(bins=35, color = "black", fill="green") +
   labs(x = "Average rating", y = "Number of users") 
 ```
 ### Number of ratings per user
@@ -128,7 +128,7 @@ Similar to the number of ratings per movie, some users also tend to rate movies 
 edx %>% 
   count(userId) %>% 
   ggplot(aes(n)) + 
-  geom_histogram( bins=35, color = "white") +
+  geom_histogram( bins=35, color = "black", fill="green") +
   scale_x_log10() +
   labs(x = "Users", y = "Number of ratings") 
   ```
@@ -182,8 +182,8 @@ movie_avgs<- edx %>%
 ```{r, echo = TRUE}
 movie_avgs %>% qplot(b_i, geom ="histogram",
                      bins = 10, data = ., 
-                     color = I("white"),
-                     ylab = "Number of movies")
+                     color = I("black"),
+                     fill=I("green"))
 ```
 As mentioned earlier, the estimates seem to vary substantially, this is because some movies are good and others are bad, therefore will have different ratings.
 
@@ -221,7 +221,8 @@ user_avgs <- edx %>%
   
 user_avgs%>% qplot(b_u, geom ="histogram", 
                    bins = 30, data = ., 
-                   color = I("white"))
+                   color = I("black"),
+                   fill=I("green"))
 ```
 
 
