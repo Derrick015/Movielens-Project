@@ -254,9 +254,7 @@ saved_pred = tempfile()
 
 # Make predictions with the validation set
 r$predict(valid_fc, out_file(saved_pred))
-
 actual_ratings <- read.table("validationset.txt", header = FALSE, sep = " ")$V3
-
 predicted_ratings <- scan(saved_pred)
 
 # Calculate the RMSE.
