@@ -345,7 +345,7 @@ The recommender model will now be trained with $train().
 r$train(train_fc, opts = c(opts$min, nthread = 1, niter = 20))
 ```
 
-Next, we will write the predictions to a temp file on the hard drive, make predictions on the validation set and calculate the RMSE.
+Next, we will write the predictions to a temp file on the hard drive, make predictions with the validation set and calculate the RMSE.
 
 ```{r, echo = TRUE}
 
