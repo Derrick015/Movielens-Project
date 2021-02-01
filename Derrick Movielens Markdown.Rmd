@@ -13,7 +13,7 @@ output:
 
 # Introduction
 
-A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields but in this project, we will focus on building a movie recommendation system. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; <https://grouplens.org/datasets/movielens/10m/> and <http://files.grouplens.org/datasets/movielens/ml-10m.zip>. This dataset contains roughly ten million observations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
+A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields, and in this project, we will explore how a recommender system can be applied to movies. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; <https://grouplens.org/datasets/movielens/10m/> and <http://files.grouplens.org/datasets/movielens/ml-10m.zip>. This dataset contains roughly ten million observations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
 
 In this project, we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will first start by importing data, performing some exploratory data analysis and finally comparing five models in order to determine the best Root Mean Square Error (RMSE).
 
@@ -122,7 +122,7 @@ edx %>% group_by(userId) %>%
   labs(x = "Average rating", y = "Number of users") 
 ```
 ### Number of ratings per user
-Similar to the number of ratings per movie, some users also tend to rate movies a lot more number of times than others. 
+Similar to the number of ratings per movie, some users also tend to rate movies a lot more times than others. 
 
 ```{r}
 edx %>% 
@@ -132,7 +132,7 @@ edx %>%
   scale_x_log10() +
   labs(x = "Users", y = "Number of ratings") 
   ```
-  These figures demonstrates a user effect we will adjusted for in developing our model. 
+  These figures demonstrate a user effect which we will adjust for in developing our model. 
  
  
  ## Modeling approach
@@ -207,7 +207,7 @@ By adding the computed $b_{i}$ to $\mu$ and thus capturing the movie effect, we 
 
 ### 3. Movie and user effect model
 
-Next, we have to consider how users rate movies.As illustrated in the histogram below, we can see variability across users, with some users rating most of the movies they watch highly while others donot. Therefore our model will need to be augmented with a new term $b_{u}$ which is the user-specific effect. This makes our new model:
+Next, we have to consider how users rate movies. As illustrated in the histogram below, we can see variability across users, with some users rating most of the movies they watch highly while others do not. Therefore our model will need to be augmented with a new term $b_{u}$ which is the user-specific effect. This makes our new model:
 
 $$Y_{u, i} = \mu + b_{i} + b_{u} + \epsilon_{u, i}$$
 
@@ -249,7 +249,7 @@ rmse_results %>% knitr::kable()
  
 ### 4. Regularizing movie and user effect
 
-In our previous models, a grievous error was overlooked. Some obscure movies were rated by a few people leading to more uncertainty, and therefore resulting in larger estimates for $b_{i}$ and $b_{u}$. These are noisy estimates that results in large errors and should not be trusted. Normally we compute standard errors and construct confidence intervals to account for different levels of uncertainty. However, when making predictions we need one number, one prediction, not an interval. For this, we require the concept of regularization. Regularization permits us to penalize large estimates that come from small sample sizes. The general idea is to add a penalty for large values of $b_{i}$ and $b_{u}$ to the sum of squares equation that we minimize. To do this, we require a tuning parameter (lambda) that will minimize the RMSE. This will therefore minimize the estimates of $b_{i}$ and $b_{u}$ if the number of ratings is small. 
+In our previous models, a grievous error was overlooked. Some obscure movies were rated by a few people leading to more uncertainty, and therefore resulting in larger estimates for $b_{i}$ and $b_{u}$. These are noisy estimates that result in large errors and should not be trusted. Normally we compute standard errors and construct confidence intervals to account for different levels of uncertainty. However, when making predictions we need one number, one prediction, not an interval. For this, we require the concept of regularization. Regularization permits us to penalize large estimates that come from small sample sizes. The general idea is to add a penalty for large values of $b_{i}$ and $b_{u}$ to the sum of squares equation that we minimize. To do this, we require a tuning parameter (lambda) that will minimize the RMSE. This will therefore minimize the estimates of $b_{i}$ and $b_{u}$ if the number of ratings is small. 
 
 For the penalty, we will use numbers from 0 to 10 with increments of 0.25
 
@@ -299,9 +299,9 @@ rmse_results %>% knitr::kable()
 
 ###5. Matrix factorization
 
-Matrix factorization is a widely used concept in machine learning.It is similar to factor analysis, single value composition, and principal component analysis. It works by decomposing the user-item interaction matrix into a product of two lower dimensionality rectangular matrices. We will apply this approach to our recommender system by utilizing the recosystem library. 
+Matrix factorization is a widely used concept in machine learning. It is similar to factor analysis, single value composition, and principal component analysis. It works by decomposing the user-item interaction matrix into a product of two lower dimensionality rectangular matrices. We will apply this approach to our recommender system by utilizing the recosystem library. 
 
-First, both the training and validation set will need to be organized into three columns: user (userId),item (movieId) and the value (rating).
+First, both the training and validation set will need to be organized into three columns: user (userId), item (movieId) and the value (rating).
 
 ```{r, echo = TRUE} 
 edx_fc <- edx %>% select(movieId, userId, rating)
@@ -376,7 +376,7 @@ rmse_results %>% knitr::kable()
 rmse_results %>% knitr::kable()
 ```
 
-As illustrated above, we utilized five models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we used the mean rating to make predictions. This resulted in the highest RMSE of approximately **1.0612**. Next, we adjusted the model to account for the movie effect which produced an RMSE of about **0.9439**. We further augmented the model by capturing the user effect which gave us a better RMSE of approximately **0.8653**. Afterwards we regularized the movie and user effect model to get rid of noisy estimates affecting our model. This led to a slightly better RMSE of about **0.8648**. Finally, by applying matrix factorization we achieved the best RMSE of **0.7939213**.
+As illustrated above, we utilized five models for our recommender system with differing RMSE. In our first model (Average Movie Rating), we used the mean rating to make predictions. This resulted in the highest RMSE of approximately **1.0612**. Next, we adjusted the model to account for the movie effect which produced an RMSE of about **0.9439**. We further augmented the model by capturing the user effect which gave us a better RMSE of approximately **0.8653**. Afterwards, we regularized the movie and user effect model to get rid of noisy estimates affecting our model. This led to a slightly better RMSE of about **0.8648**. Finally, by applying matrix factorization we achieved the best RMSE of **0.7939213**.
 
 
 # Conclusion
