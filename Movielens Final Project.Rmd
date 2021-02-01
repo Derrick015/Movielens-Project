@@ -297,7 +297,7 @@ rmse_results %>% knitr::kable()
 ```
 
 
-###5. Matrix factorization
+### 5. Matrix factorization
 
 Matrix factorization is a widely used concept in machine learning. It is similar to factor analysis, single value composition, and principal component analysis. It works by decomposing the user-item interaction matrix into a product of two lower dimensionality rectangular matrices. We will apply this approach to our recommender system by utilizing the recosystem library. 
 
@@ -307,7 +307,7 @@ First, both the training and validation set will need to be organized into three
 edx_fc <- edx %>% select(movieId, userId, rating)
 validation_fc <- validation %>% select(movieId, userId, rating)
 ```
-We will then transform them into a matrix format.
+We will transform them into a matrix format.
 
 ```{r, echo = TRUE}
 edx_fc <- as.matrix(edx_fc)
@@ -322,7 +322,7 @@ write.table(edx_fc, file = "trainingset.txt", sep = " ", row.names = FALSE,
 write.table(validation_fc, file = "validationset.txt", sep = " ", 
             row.names = FALSE, col.names = FALSE)
 ```
-A supported data formart can be utilized by calling the data_file() fucntion.
+A supported data formart will be utilized by calling the data_file() fucntion.
 ```{r, echo = TRUE}           
 set.seed(76)
 train_fc <- data_file("trainingset.txt")
@@ -352,17 +352,14 @@ Next, we will write the predictions to a temp file on the hard drive, make predi
 
 saved_pred = tempfile()
 
-
 r$predict(valid_fc, out_file(saved_pred))
-
 actual_ratings <- read.table("validationset.txt", header = FALSE, sep = " ")$V3
-
 predicted_ratings <- scan(saved_pred)
 
 rmse_fc <- RMSE(actual_ratings, predicted_ratings)
 rmse_fc 
 ```
-Finally, we will save and tabulate the RMSE for comparison with the previous models.
+Finally, we will save and tabulate the RMSE for comparison with previous models.
 
 ```{r, echo = TRUE}
 rmse_results <- bind_rows(rmse_results,
