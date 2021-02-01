@@ -13,9 +13,9 @@ output:
 
 # Introduction
 
-A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields, and in this project, we will explore how a recommender system can be applied to movies. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; <https://grouplens.org/datasets/movielens/10m/> and <http://files.grouplens.org/datasets/movielens/ml-10m.zip>. This dataset contains roughly ten million observations and six variables namely; userId, movieId, rating, timestamp, title and genres. 
+A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields, and in this project, we will explore how recommender systems can be applied to movies. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; <https://grouplens.org/datasets/movielens/10m/> and <http://files.grouplens.org/datasets/movielens/ml-10m.zip>. This dataset contains roughly ten million observations and six variables; userId, movieId, rating, timestamp, title and genres. 
 
-In this project, we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will first start by importing data, performing some exploratory data analysis and finally comparing five models in order to determine the best Root Mean Square Error (RMSE).
+In this project, we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will first start by importing data, performing some exploratory data analysis and finally comparing five models to determine the best Root Mean Square Error (RMSE).
 
 
 # Methods
