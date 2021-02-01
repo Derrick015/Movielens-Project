@@ -110,6 +110,7 @@ rmse_results <- data_frame(method = "Average Movie Rating",
 rmse_results %>% knitr::kable()
 
 
+
 # 2. Movie Effect Model
 
 # Compute movie effect
@@ -135,6 +136,7 @@ rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Movie effect model",  
                                      RMSE = model_1_rmse ))
 rmse_results %>% knitr::kable()
+
 
 
 # 3. Movie and user effect model
@@ -203,7 +205,7 @@ qplot(lambdas, rmses)
 lambda <- lambdas[which.min(rmses)]
 lambda
 
-# Calculate and save rmse accounting for regularized movie and user effect model
+# Calculate and save rmse accounting for the regularized movie and user effect model
 rmse_results <- bind_rows(rmse_results,
 data_frame(method="Regularized movie and user effect model",
 RMSE = min(rmses)))
@@ -213,22 +215,22 @@ rmse_results %>% knitr::kable()
 
 #5. Matrix factorization
 
-# Select three columns: user (userId),item (movieId) and the value (rating)
+# Select three columns: user (userId), item (movieId) and the value (rating)
 edx_fc <- edx %>% select(movieId, userId, rating)
 validation_fc <- validation %>% select(movieId, userId, rating)
 
-# Transform into a matrix format.
+# Transform variables into matrix format.
 edx_fc <- as.matrix(edx_fc)
 validation_fc <- as.matrix(validation_fc)
 
-# write datasets onto the hard disk as tables and assign them to a train set (train_fc) and a validation set(valid_fc)
+# Write datasets onto the hard disk as tables 
 write.table(edx_fc, file = "trainingset.txt", sep = " ", row.names = FALSE, 
             col.names = FALSE)
 
 write.table(validation_fc, file = "validationset.txt", sep = " ", 
             row.names = FALSE, col.names = FALSE)
 
-# A supported data format can be utilized by calling the data_file() function.           
+# Assign the written datasets to a train set (train_fc) and a validation set(valid_fc). A supported data format will be utilized by calling the data_file() function.           
 set.seed(76)
 train_fc <- data_file("trainingset.txt")
 
@@ -247,7 +249,7 @@ opts
 # The recommender model will now be trained with $train().
 r$train(train_fc, opts = c(opts$min, nthread = 1, niter = 20))
 
-# write the predictions to a temp file on the hard drive  and calculate the RMSE
+# Write the predictions to a temp file on the hard drive
 saved_pred = tempfile()
 
 # Make predictions with the validation set
@@ -257,11 +259,11 @@ actual_ratings <- read.table("validationset.txt", header = FALSE, sep = " ")$V3
 
 predicted_ratings <- scan(saved_pred)
 
-#calculate the RMSE.
+# Calculate the RMSE.
 rmse_fc <- RMSE(actual_ratings, predicted_ratings)
 rmse_fc 
 
-# save and tabulate the RMSE for comparison with the previous models
+# Save and tabulate the RMSE for comparison with the previous models
 rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Matrix factorization", RMSE = rmse_fc ))
 rmse_results %>% knitr::kable()
