@@ -378,8 +378,13 @@ As illustrated above, we utilized five models for our recommender system with di
 
 # Conclusion
 
+# Summary
 The goal of this project was to develop a movie recommender system with the MovieLens 10M dataset. After some exploratory data analysis, we realized patterns in our movie and user data that influenced the creation of our models. These were the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally the matrix factorization which produced the lowest RMSE of about **0.7939**.
+
+##Limitation
 There were severe CPU and memory limitations, curtailing the utilization of powerful techniques and larger datasets which may have resulted in better model performance.
+
+## Future work
 For my future work, it would be interesting to explore how the genre effect affects model performance. The ensemble method which combines several models could also be employed and its impact on model performance measured.
 
 
