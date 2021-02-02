@@ -1,12 +1,17 @@
- ---
+---
 title: "Movielens Project"
 author: "Derrick Owusu Ofori"
 date: "11/01/2021"
 output:
   pdf_document:
-    toc: true
-    toc_depth: 3
-    number_sections: true
+    toc: yes
+  html_document:
+    fig_height: 4.5
+    fig_width: 7
+    highlight: tango
+    number_sections: yes
+    theme: readable
+    toc: yes
 ---
 
 
@@ -21,9 +26,7 @@ In this project, we will utilize a subset of the dataset to build an algorithm t
 # Methods
 
 ## Installing packages and Importing data
-
 ```{r, message=FALSE}
-#Load Packages and libraries
 if(!require(tidyverse)) install.packages("tidyverse", repos = "http://cran.us.r-project.org")
 if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.org")
 if(!require(data.table)) install.packages("data.table", repos = "http://cran.us.r-project.org")
@@ -35,9 +38,6 @@ library(caret)
 library(data.table)
 library(recosystem)
 ```
-MovieLens 10M dataset:
-https://grouplens.org/datasets/movielens/10m/
-http://files.grouplens.org/datasets/movielens/ml-10m.zip
 
 ```{r, echo = TRUE}
 dl <- tempfile()
@@ -253,7 +253,7 @@ In our previous models, a grievous error was overlooked. Some obscure movies wer
 
 For the penalty, we will use numbers from 0 to 10 with increments of 0.25
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, message = FALSE}
 lambdas<- seq(0,10,0.25)
 
 rmses <- sapply(lambdas, function(l){
