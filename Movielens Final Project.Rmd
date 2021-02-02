@@ -32,14 +32,13 @@ if(!require(caret)) install.packages("caret", repos = "http://cran.us.r-project.
 if(!require(data.table)) install.packages("data.table", repos = "http://cran.us.r-project.org")
 if(!require(recosystem)) install.packages("recosystem", repos = "http://cran.us.r-project.org")
 
-
 library(tidyverse)
 library(caret)
 library(data.table)
 library(recosystem)
 ```
 
-```{r, echo = TRUE}
+```{r}
 dl <- tempfile()
 download.file("http://files.grouplens.org/datasets/movielens/ml-10m.zip", dl)
 
@@ -65,7 +64,7 @@ movielens <- left_join(ratings, movies, by = "movieId")
 The dataset will now be split into a train set (edx) which we will use to train, develop and select our algorithm and a test set (validation) to test the performance of the final algorithm. The test set will be 10% of the dataset.
 
 
-```{r, echo = TRUE}
+```{r, message = FALSE, warning= FALSE}
 # Validation set will be 10% of MovieLens data
 set.seed(1, sample.kind="Rounding") # if using R 3.5 or earlier, use `set.seed(1)`
 test_index <- createDataPartition(y = movielens$rating, times = 1, p = 0.1, list = FALSE)
@@ -90,7 +89,7 @@ rm(dl, ratings, movies, test_index, temp, movielens, removed)
 ### Average movie rating
 The figure below indicates that certain movies tend to have higher ratings on average while others have lower ratings on average.
 
-```{r}
+```{r,message =FALSE}
 # Average movie rating
 edx %>% group_by(movieId) %>%
   summarise(avg_rating = sum(rating)/n()) %>%
@@ -107,20 +106,21 @@ edx %>%
   ggplot(aes(n)) + 
   geom_histogram( bins=35, color = "black", fill="green") +
   scale_x_log10() + labs(x = "Movies", y = "Number of Ratings")
- ```
-These patterns indicate a movie effect which will be accounted for during the final algorithm.
+```
 
+These patterns indicate a movie effect which will be accounted for during the final algorithm.
 
 ### Average rating per user
 
 We see from this figure that certain users give higher ratings on average than others.
-```{r}
+```{r,message=FALSE}
 edx %>% group_by(userId) %>%
   summarise(avg_rating = sum(rating)/n()) %>%
   ggplot(aes(avg_rating)) +
   geom_histogram(bins=35, color = "black", fill="green") +
   labs(x = "Average rating", y = "Number of users") 
 ```
+
 ### Number of ratings per user
 Similar to the number of ratings per movie, some users also tend to rate movies a lot more times than others. 
 
@@ -131,79 +131,87 @@ edx %>%
   geom_histogram( bins=35, color = "black", fill="green") +
   scale_x_log10() +
   labs(x = "Users", y = "Number of ratings") 
-  ```
-  These figures demonstrate a user effect which we will adjust for in developing our model. 
+```
+
+These figures demonstrate a user effect which we will adjust for in developing our model. 
  
  
- ## Modeling approach
+## Modeling approach
 
 The criteria to evaluate model performance will be the Root Mean Square Error (RMSE). The RMSE is the square root of the mean of the square of all the errors. It can be calculated by squaring the residuals, finding the average of the residuals and taking the square root of the result. It measures the difference between the predicted and actual values, with a lower RMSE value being better than a higher value.
 
 $$ RMSE = \sqrt{\frac{1}{N}\displaystyle\sum_{u,i} (\hat{y}_{u,i}-y_{u,i})^{2}} $$
+
 
 ### 1. Average Movie Rating Model
 Our first model will be a simple recommendation system. A model-based approach will be utilized, which assumes the same rating for all movies and all users, with all differences explained by random variation. 
 
 $$ Y_{u, i} = \mu + \epsilon_{u, i} $$
 
-Here $\epsilon_{u, i}$ represents an independent error sample from the same distribution centred at 0 and $\mu$ represents the true rating for all movies. The estimate that minimizes the residual mean squared error is the least-squares estimate of $Y_{u, i}$, in this instance, it is the average of all the ratings.
+Here $\epsilon_{u, i}$ represents an independent error sample from the same distribution centered at 0 and $\mu$ represents the true rating for all movies. The estimate that minimizes the residual mean squared error is the least-squares estimate of $Y_{u, i}$ which is the average of all the ratings.
 
-```{r, echo = TRUE}
+```{r}
 mu <- mean(edx$rating)
 mu
 ```
 
 With a mean rating of approximately 3.51, we will move forth and compute the naive RMSE
-```{r, echo = TRUE}
+
+```{r,message= FALSE}
 naive_rmse <- RMSE(validation$rating, mu)
 naive_rmse
 ```
 Now we will tabulate the first RMSE results for later comparison with other models.
 
-```{r, echo = TRUE}
+```{r, warning= FALSE, message= FALSE}
 rmse_results <- data_frame(method = "Average Movie Rating",
                            RMSE = naive_rmse)
 rmse_results %>% knitr::kable()
 ```
+
 
 ### 2. Movie Effect Model
 
 Some movies tend to be rated higher than others as we will see in the diagram below, thus we can improve our previous model by including a term, $b_{i}$ to represent the average rating for each movie  $i$. 
 $$Y_{u, i} = \mu +b_{i}+ \epsilon_{u, i}$$
 
-The least sqaures estimate is the average of the $$Y_{u, i}$$ minus the overall mean for each movie $i$. This can be computed with:
+The least squares estimate is the average of the $$Y_{u, i}$$ minus the overall mean for each movie $i$. This can be computed with:
 
-```{r, echo = TRUE}
+```{r, message= FALSE}
 movie_avgs<- edx %>% 
   group_by(movieId) %>%
   summarise(b_i=mean(rating-mu))
 ```
 
-```{r, echo = TRUE}
+```{r}
 movie_avgs %>% qplot(b_i, geom ="histogram",
                      bins = 10, data = ., 
                      color = I("black"),
                      fill=I("green"))
 ```
-As mentioned earlier, the estimates seem to vary substantially, this is because some movies are good and others are bad, therefore will have different ratings.
+
+As mentioned earlier, the estimates seem to vary substantially, this is because some movies are good and others are bad resulting in different average ratings.
 
 Now let's make predictions with the inclusion of the movie effect.
 
-```{r, echo = TRUE}
+```{r}
 predicted_ratings <- mu +  validation %>%
   left_join(movie_avgs, by='movieId') %>%
   .$b_i
 ```
+
 We will now tabulate this result with previous RMSE results for comparison
 
-```{r, echo = TRUE}
+```{r}
 model_1_rmse <- RMSE(predicted_ratings, validation$rating)
 rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Movie effect model",  
                                      RMSE = model_1_rmse ))
 rmse_results %>% knitr::kable()
 ```
+
 By adding the computed $b_{i}$ to $\mu$ and thus capturing the movie effect, we can see an improvement in the model. However, there is still more we can do to make the recommender system even better.
+
 
 ### 3. Movie and user effect model
 
@@ -213,12 +221,14 @@ $$Y_{u, i} = \mu + b_{i} + b_{u} + \epsilon_{u, i}$$
 
 We will compute $\mu$ and $b_{i}$, and estimating  $b_{u}$, as the average of $$Y_{u, i} - \mu - b_{i}$$
 
-```{r, echo = TRUE}  
+```{r, message= FALSE}  
 user_avgs <- edx %>%
   left_join(movie_avgs, by='movieId') %>%
   group_by(userId) %>%
   summarize(b_u = mean(rating - mu - b_i))
-  
+```  
+
+```{r}
 user_avgs%>% qplot(b_u, geom ="histogram", 
                    bins = 30, data = ., 
                    color = I("black"),
@@ -228,16 +238,16 @@ user_avgs%>% qplot(b_u, geom ="histogram",
 
 We will now make predictions with the user effect captured.
 
-```{r, echo = TRUE}
+```{r}
 predicted_ratings <- validation %>%
   left_join(movie_avgs, by='movieId') %>%
   left_join(user_avgs, by='userId') %>%
   mutate(pred = mu + b_i + b_u) %>%
   .$pred
- ```
- We will save this result with previous RMSE results for comparison
+```
+We will save this result with previous RMSE results for comparison
  
-```{r, echo = TRUE}
+```{r}
 model_2_rmse <- RMSE(predicted_ratings, validation$rating)
 rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Movie and user effect model",  
@@ -253,7 +263,7 @@ In our previous models, a grievous error was overlooked. Some obscure movies wer
 
 For the penalty, we will use numbers from 0 to 10 with increments of 0.25
 
-```{r, echo = TRUE, message = FALSE}
+```{r, message = FALSE}
 lambdas<- seq(0,10,0.25)
 
 rmses <- sapply(lambdas, function(l){
@@ -280,7 +290,7 @@ rmses <- sapply(lambdas, function(l){
 ```
 
 Next we will plot rmses vs lambdas to select the optimal lambda     
-```{r, echo = TRUE}                                        
+```{r}                                        
 qplot(lambdas, rmses)  
 lambda <- lambdas[which.min(rmses)]
 lambda
@@ -289,7 +299,7 @@ Here the optimal lambda is 5.25
 
 Now we will tabulate and store the regularized result and compare it to the previous models.
 
-```{r, echo = TRUE}  
+```{r}  
 rmse_results <- bind_rows(rmse_results,
 data_frame(method="Regularized movie and user effect model",
 RMSE = min(rmses)))
