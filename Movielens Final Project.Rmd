@@ -20,8 +20,7 @@ output:
 
 A recommendation system is a class of machine learning algorithm that offers useful and relevant suggestions to users. A recommendation system has applications in several fields, and in this project, we will explore how recommender systems can be applied to movies. We will employ the MovieLens 10M dataset complied by the Grouplens Research lab found here; <https://grouplens.org/datasets/movielens/10m/> and <http://files.grouplens.org/datasets/movielens/ml-10m.zip>. This dataset contains roughly ten million observations and six variables; userId, movieId, rating, timestamp, title and genres. 
 
-In this project, we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will first start by importing data, performing some exploratory data analysis and finally comparing five models to determine the best Root Mean Square Error (RMSE).
-
+In this project, we will utilize a subset of the dataset to build an algorithm that can make predictions about ratings in a validation set. We will start by importing data, performing some exploratory data analysis and then compare five models to determine the one with the best Root Mean Square Error (RMSE).
 
 # Methods
 
@@ -164,9 +163,8 @@ naive_rmse
 Now we will tabulate the first RMSE results for later comparison with other models.
 
 ```{r, warning= FALSE, message= FALSE}
-rmse_results <- data_frame(method = "Average Movie Rating",
+rmse_results <- data_frame(Method  = "Average Movie Rating",
                            RMSE = naive_rmse)
-rmse_results %>% knitr::kable()
 ```
 
 
@@ -205,12 +203,10 @@ We will now tabulate this result with previous RMSE results for comparison
 ```{r}
 model_1_rmse <- RMSE(predicted_ratings, validation$rating)
 rmse_results <- bind_rows(rmse_results,
-                          data_frame(method="Movie effect model",  
+                          data_frame(Method ="Movie effect model",  
                                      RMSE = model_1_rmse ))
-rmse_results %>% knitr::kable()
 ```
 
-By adding the computed $b_{i}$ to $\mu$ and thus capturing the movie effect, we can see an improvement in the model. However, there is still more we can do to make the recommender system even better.
 
 
 ### 3. Movie and user effect model
@@ -250,18 +246,16 @@ We will save this result with previous RMSE results for comparison
 ```{r}
 model_2_rmse <- RMSE(predicted_ratings, validation$rating)
 rmse_results <- bind_rows(rmse_results,
-                          data_frame(method="Movie and user effect model",  
+                          data_frame(Method ="Movie and user effect model",  
                                      RMSE = model_2_rmse))
-
-rmse_results %>% knitr::kable()
 ```
  
  
 ### 4. Regularizing movie and user effect
 
-In our previous models, a grievous error was overlooked. Some obscure movies were rated by a few people leading to more uncertainty, and therefore resulting in larger estimates for $b_{i}$ and $b_{u}$. These are noisy estimates that result in large errors and should not be trusted. Normally we compute standard errors and construct confidence intervals to account for different levels of uncertainty. However, when making predictions we need one number, one prediction, not an interval. For this, we require the concept of regularization. Regularization permits us to penalize large estimates that come from small sample sizes. The general idea is to add a penalty for large values of $b_{i}$ and $b_{u}$ to the sum of squares equation that we minimize. To do this, we require a tuning parameter (lambda) that will minimize the RMSE. This will therefore minimize the estimates of $b_{i}$ and $b_{u}$ if the number of ratings is small. 
+In our previous models, a grievous error was overlooked. Some obscure movies were rated by a few number of people leading to more uncertainty, and resulting in larger estimates for $b_{i}$ and $b_{u}$. These are noisy estimates that result in large errors and should not be trusted. Normally, we compute standard errors and construct confidence intervals to account for different levels of uncertainty. However, when making predictions we need one number, one prediction, not an interval. For this, we require the concept of regularization. Regularization permits us to penalize large estimates that come from small sample sizes. The general idea is to add a penalty for large values of $b_{i}$ and $b_{u}$ to the sum of squares equation that we minimize. To do this, we require a tuning parameter (lambda) that will minimize the RMSE. This will therefore minimize the estimates of $b_{i}$ and $b_{u}$ if the number of ratings is small. 
 
-For the penalty, we will use numbers from 0 to 10 with increments of 0.25
+For the penalty term, we will use numbers from 0 to 10 with increments of 0.25
 
 ```{r, message = FALSE}
 lambdas<- seq(0,10,0.25)
@@ -297,13 +291,12 @@ lambda
 ```
 Here the optimal lambda is 5.25
 
-Now we will tabulate and store the regularized result and compare it to the previous models.
+Now we will tabulate and store the regularized result.
 
 ```{r}  
 rmse_results <- bind_rows(rmse_results,
-data_frame(method="Regularized movie and user effect model",
+data_frame(Method ="Regularized movie and user effect model",
 RMSE = min(rmses)))
-rmse_results %>% knitr::kable()
 ```
 
 
@@ -358,7 +351,7 @@ r$train(train_fc, opts = c(opts$min, nthread = 1, niter = 20))
 
 Next, we will write the predictions to a temp file on the hard drive, make predictions with the validation set and calculate the RMSE.
 
-```{r, message = FALSE}
+```{r,message=FALSE}
 
 saved_pred = tempfile()
 
@@ -373,8 +366,7 @@ Finally, we will save and tabulate the RMSE for comparison with previous models.
 
 ```{r}
 rmse_results <- bind_rows(rmse_results,
-                          data_frame(method="Matrix factorization", RMSE = rmse_fc ))
-rmse_results %>% knitr::kable()
+                          data_frame(Method ="Matrix factorization", RMSE = rmse_fc ))
 ```
 
 # Results
@@ -390,13 +382,10 @@ rmse_results %>% knitr::kable()
 # Conclusion
 
 ## Summary
-The goal of this project was to develop a movie recommender system with the MovieLens 10M dataset. After some exploratory data analysis, we realized patterns in our movie and user data that influenced the creation of our models. These were the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally the matrix factorization which produced the lowest RMSE of about **0.7939**.
+The goal of this project was to develop a movie recommender system with the MovieLens 10M dataset. After some exploratory data analysis, we realized patterns in our movie and user data that influenced the creation of our models. These were the average movie rating model, the movie effect model, the movie and user effect model, the regularized movie and user effect model and finally matrix factorization which produced the lowest RMSE of about **0.7939**.
 
 ## Limitation
-There were severe CPU and memory limitations, curtailing the utilization of powerful techniques and larger dataset which may have resulted in better model performance.
+There were severe CPU and memory limitations, curtailing the utilization of powerful techniques which may have resulted in better model performance.
 
 ## Future work
-For my future work, it would be interesting to explore how the genre effect affects model performance. The ensemble method which combines several models could also be employed and its impact on model performance measured.
-
-
-
+For my future work, I would like to explore how the genre effect affects model performance. The ensemble method which combines several models would also be looked into and its impact on model performance measured.
