@@ -107,7 +107,6 @@ naive_rmse
 #Produce and save results in dataframe
 rmse_results <- data_frame(method = "Average Movie Rating",
                            RMSE = naive_rmse)
-rmse_results %>% knitr::kable()
 
 
 
@@ -123,7 +122,7 @@ movie_avgs %>% qplot(b_i, geom ="histogram",
                      bins = 10, data = ., 
                      color = I("black"),
                      fill=I("green"))
-                     
+
 
 # Predict rating including the movie effect model
 predicted_ratings <- mu +  validation %>%
@@ -135,7 +134,6 @@ model_1_rmse <- RMSE(predicted_ratings, validation$rating)
 rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Movie effect model",  
                                      RMSE = model_1_rmse ))
-rmse_results %>% knitr::kable()
 
 
 
@@ -146,7 +144,7 @@ user_avgs <- edx %>%
   left_join(movie_avgs, by='movieId') %>%
   group_by(userId) %>%
   summarize(b_u = mean(rating - mu - b_i))
-  
+
 # Plot number of movies with user effect estimate
 user_avgs%>% qplot(b_u, geom ="histogram", 
                    bins = 30, data = ., 
@@ -159,17 +157,14 @@ predicted_ratings <- validation %>%
   left_join(user_avgs, by='userId') %>%
   mutate(pred = mu + b_i + b_u) %>%
   .$pred
- 
+
 # Calculate and save rmse accounting for the movie and user effect
 model_2_rmse <- RMSE(predicted_ratings, validation$rating)
 rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Movie and user effect model",  
                                      RMSE = model_2_rmse))
 
-rmse_results %>% knitr::kable()
 
- 
- 
 # 4.Regularizing movie and user effect
 
 # Generate lambdas from 0 to 10 with 0.25 increments
@@ -207,10 +202,8 @@ lambda
 
 # Calculate and save rmse accounting for the regularized movie and user effect model
 rmse_results <- bind_rows(rmse_results,
-data_frame(method="Regularized movie and user effect model",
-RMSE = min(rmses)))
-rmse_results %>% knitr::kable()
-
+                          data_frame(method="Regularized movie and user effect model",
+                                     RMSE = min(rmses)))
 
 
 #5. Matrix factorization
@@ -230,7 +223,8 @@ write.table(edx_fc, file = "trainingset.txt", sep = " ", row.names = FALSE,
 write.table(validation_fc, file = "validationset.txt", sep = " ", 
             row.names = FALSE, col.names = FALSE)
 
-# Assign the written datasets to a train set (train_fc) and a validation set(valid_fc). A supported data format will be utilized by calling the data_file() function.           
+# Assign the written datasets to a train set (train_fc) and a validation set(valid_fc). 
+#A supported data format will be utilized by calling the data_file() function.           
 set.seed(76)
 train_fc <- data_file("trainingset.txt")
 
@@ -242,8 +236,8 @@ r = Reco()
 
 # We utilize the $tune() approach to find the optimum tuning parameter.
 opts <- r$tune(train_fc, opts = list(dim = c(5, 10, 15), lrate = 
-                                               c(0.1,0.2), costp_l1 = 0,
-                                               costq_l1 = 0, nthread = 1, niter = 10))
+                                       c(0.1,0.2), costp_l1 = 0,
+                                     costq_l1 = 0, nthread = 1, niter = 10))
 opts
 
 # The recommender model will now be trained with $train().
@@ -264,10 +258,6 @@ rmse_fc
 # Save and tabulate the RMSE for comparison with the previous models
 rmse_results <- bind_rows(rmse_results,
                           data_frame(method="Matrix factorization", RMSE = rmse_fc ))
+
+# Results
 rmse_results %>% knitr::kable()
-
-
-
-
-
-
